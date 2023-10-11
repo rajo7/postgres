@@ -1,0 +1,105 @@
+## postgres 
+1 - Installing postgres
+
+    sudo dnf install postgress-server
+
+    postgres -V
+
+2 - Initializing the database 
+
+    sudo postgresql-setup --initdb --unit postgresql
+
+    systemctl enable postgresql
+
+    systemctl start postgresql
+
+3 - Checking postmaster is available
+
+    ps -ef|grep postgres
+
+4 - logging into postgresql server
+
+    su postgres                       #switching to postgres user
+
+    psql                              #command line tool to logging
+
+5 - To list the databases
+
+    \l
+
+
+6 - checking postmaster.pid if the server is up  
+
+    cd /var/lib/pgsql/data
+
+    pwd
+
+    ls -ltrh
+
+  ## Connect using PGAdmin tool
+
+  1 - Go to Virtal Machine Settings, choose Network and change Bridged Adapter to NAT
+
+  2 - Go Advanced, configure port forwarding (
+      
+      Host IP = 127.0.0.1
+
+      Host Port = 2000
+
+      Guest IP = 10.0.2.15
+
+      Guest Port = 22
+  )
+ 
+  3 - Restart the Network service
+
+  4 - Open Putty, choose 127.0.0.1 as a local IP and port is 2000, now you can connect
+
+  ## Need to make changes in Configuration files
+
+  1 - Switch to Postgres User
+
+    su postgres
+
+  2 - grepping postgres and changing directory to config files
+
+    ps -ef|grep postgres
+
+    cd /var/lib/pgsql/data/
+    
+    ls -ltrh
+
+    vi pg_hba.conf
+
+       in IPv4 local connections:
+        #host   all   all   127.0.0.1/32   ident
+         host   all   all   all            trust
+
+   3 - Save the file     
+
+   4 - Restart the postgresql
+
+       systemctl restart postgresql
+
+   5 - Open PGAdmin
+
+      Server -> Create New Server -> Name the Server
+
+        Switch to Connection Tab 
+          Hostname = localhost
+          port = 5432
+          username = postgres
+
+        Switch to SSH Tunnel Tab
+          Use SSH tunneling: Yes
+          Tunnel Host: localhost
+          Tunnel Port: 2000
+          Username: OS user/root
+          password: *****
+
+         Save
+
+   6 - Now, Postgres User will be connected, you can check by right clicking on Server
+
+        Right click on Server
+        
